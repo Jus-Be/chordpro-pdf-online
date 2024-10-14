@@ -1,4 +1,4 @@
-export const sampleChordProChart = `
+const e=`
 {title: Your Mercy Flows}
 {artist: Dele Olajide}
 {subtitle: (unknown)}
@@ -40,4 +40,4 @@ As your [E]grace a[A]bounds, my [C#m]fears all [B]fade [E]away [A] [C#m] [B]
 [C#m]Let those praises [B]ring
 'Cos there [E]is no [A]one like [B]Him[B/D#]
 Jesus our [E]King [A] [C#m] [B]
-`;
+`;export{e as sampleChordProChart};
