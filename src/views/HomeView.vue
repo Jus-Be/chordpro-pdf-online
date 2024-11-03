@@ -64,6 +64,13 @@
         >
           Print
         </button>
+        <button
+          @click="onMidi()"
+          type="button"
+          class="midi-button"
+        >
+          Midi
+        </button>		
       </fieldset>
     </form>
     <LoaderBars
@@ -130,6 +137,28 @@ function onChordChartClick(event) {
   }
   textareaRef.value.focus();
 };
+
+async function onMidi() {
+	console.debug("Generate Midi file");
+	const midiFilename = prompt("Enter filename");
+	
+	if (midiFilename) {
+		const url = "https://pade.chat:5443/broadcastbox-jsp/cp2midi";
+		let blobType = "audio/midi";
+		let fileExtn = ".mid";
+
+		const response = await fetch(url, {method: "POST", body: document.getElementById("chordpro-input").value});
+		const blob = await response.blob();		
+		const anchor = document.createElement('a');
+		anchor.href = window.URL.createObjectURL(blob);
+		anchor.style = "display: none;";
+		anchor.download = midiFilename + fileExtn;
+		document.body.appendChild(anchor);
+		anchor.click();
+		window.URL.revokeObjectURL(anchor.href);  
+	}
+  
+}
 
 function onPrint() {
   window.print();
