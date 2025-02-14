@@ -65,12 +65,26 @@
           Print
         </button>
         <button
+          @click="onSave()"
+          type="button"
+          class="save-button"
+        >
+          Save
+        </button>		
+        <button
           @click="onMidi()"
           type="button"
           class="midi-button"
         >
           Midi
-        </button>		
+        </button>	
+        <button
+          @click="onPlay()"
+          type="button"
+          class="play-button"
+        >
+          Play
+        </button>			
       </fieldset>
     </form>
     <LoaderBars
@@ -138,24 +152,46 @@ function onChordChartClick(event) {
   textareaRef.value.focus();
 };
 
+function onPlay() {
+	const song = document.getElementById("chordpro-input").value;
+	console.debug("Convert to midi and play", song);
+	window.parent.postMessage(song, "*");
+}
+
+function onSave() {
+	console.debug("Save chordpro file");
+	const choFilename = prompt("Enter filename");
+	
+	if (choFilename) {
+		const blob = new Blob([document.getElementById("chordpro-input").value], { type: 'text/plain' }); 	
+		const anchor = document.createElement('a');
+		anchor.href = window.URL.createObjectURL(blob);
+		anchor.style = "display: none;";
+		anchor.download = choFilename + ".cho";
+		document.body.appendChild(anchor);
+		anchor.click();
+		window.URL.revokeObjectURL(anchor.href); 
+		document.body.removeChild(anchor);			
+	}
+  
+}
+	
 async function onMidi() {
 	console.debug("Generate Midi file");
 	const midiFilename = prompt("Enter filename");
 	
 	if (midiFilename) {
-		const url = "https://pade.chat:5443/broadcastbox-jsp/cp2midi";
-		let blobType = "audio/midi";
-		let fileExtn = ".mid";
-
+		const url = "/orinayo/cp2midi";
 		const response = await fetch(url, {method: "POST", body: document.getElementById("chordpro-input").value});
 		const blob = await response.blob();		
 		const anchor = document.createElement('a');
 		anchor.href = window.URL.createObjectURL(blob);
 		anchor.style = "display: none;";
-		anchor.download = midiFilename + fileExtn;
+		anchor.download = midiFilename + ".mid";
 		document.body.appendChild(anchor);
 		anchor.click();
-		window.URL.revokeObjectURL(anchor.href);  
+		window.URL.revokeObjectURL(anchor.href);
+		document.body.removeChild(anchor);		
 	}
   
 }
