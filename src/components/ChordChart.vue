@@ -76,7 +76,7 @@ const title = computed(() => metadata.value.get('title'));
 
 watch(chordProInput, (newValue) => {
   try {
-    song.value = parser.parse(newValue);
+    song.value = parser.parse(newValue.replaceAll(":3", "").replaceAll(":2", "").replaceAll(":1", ""));	
   } catch(err) {
     console.error(err);
   }
